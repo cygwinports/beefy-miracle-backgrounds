@@ -1,0 +1,40 @@
+NAME="beefy-miracle-backgrounds"
+VERSION=16.91.0
+RELEASE=1
+CATEGORY="X11"
+SUMMARY="Fedora 17 desktop wallpaper"
+DESCRIPTION="Default wallpaper for the Fedora 17 release, along with a
+collection of selected wallpapers contributed by the Fedora community."
+HOMEPAGE="https://fedoraproject.org/wiki/Design"
+SRC_URI="https://fedorahosted.org/released/design-team/${NAME}-${VERSION}.tar.xz"
+
+ARCH=noarch
+
+beefy_miracle_backgrounds_DOCS="Attribution CC-BY-SA-3.0"
+beefy_miracle_backgrounds_CONTENTS="
+	usr/share/backgrounds/beefy-miracle/default/
+	usr/share/backgrounds/xfce/beefy-miracle.*
+	usr/share/gnome-background-properties/desktop-backgrounds-beefy-miracle.xml
+	usr/share/mate-background-properties/desktop-backgrounds-beefy-miracle.xml
+	usr/share/wallpapers/Beefy_Miracle/
+"
+
+CYGPORT_USE_UNSTABLE_API=1
+src_unpack_hook() {
+	mv 'CC-BY-SA 3.0' CC-BY-SA-3.0
+}
+
+src_compile() {
+	cd ${S}
+	cygmake
+}
+
+src_install() {
+	cd ${S}
+	cyginstall
+	mv ${D}/usr/share/{xfce4/backdrops,backgrounds/xfce}
+
+	dodir /usr/share/mate-background-properties
+	sed -e 's|gnome-wp|mate-wp|' default/desktop-backgrounds-beefy-miracle.xml \
+	    > ${D}/usr/share/mate-background-properties/desktop-backgrounds-beefy-miracle.xml
+}
